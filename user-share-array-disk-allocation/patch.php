@@ -40,9 +40,27 @@ $logicBlock = <<<'BLOCK'
 		}
 		$usadDiskNumbers = array_values(array_unique($usadDiskNumbers));
 		sort($usadDiskNumbers, SORT_NUMERIC);
+		$usadRanges = [];
+		if ($usadDiskNumbers) {
+			$usadRangeStart = $usadRangeEnd = $usadDiskNumbers[0];
+			for ($usadIndex = 1; $usadIndex < count($usadDiskNumbers); $usadIndex++) {
+				$usadNumber = $usadDiskNumbers[$usadIndex];
+				if ($usadNumber === $usadRangeEnd + 1) {
+					$usadRangeEnd = $usadNumber;
+					continue;
+				}
+				$usadRanges[] = ($usadRangeStart === $usadRangeEnd)
+					? (string)$usadRangeStart
+					: $usadRangeStart . '-' . $usadRangeEnd;
+				$usadRangeStart = $usadRangeEnd = $usadNumber;
+			}
+			$usadRanges[] = ($usadRangeStart === $usadRangeEnd)
+				? (string)$usadRangeStart
+				: $usadRangeStart . '-' . $usadRangeEnd;
+		}
 		$usadDisplay = (count($usadArrayDiskNames) > 0 && count($usadDiskNumbers) === count($usadArrayDiskNames))
 			? 'All'
-			: implode(', ', $usadDiskNumbers);
+			: implode(',', $usadRanges);
 		$usadDiskList = htmlspecialchars($usadDisplay, ENT_QUOTES, 'UTF-8');
 		/* USAD:END allocation logic */
 BLOCK;
