@@ -81,10 +81,12 @@ Name="CPU Tile Summary"
     }
   }
 
-  function removeDockerIcons(tile) {
-    // No Docker icon belongs in the Processor tile; remove one injected there by another dashboard hook.
-    var icons = tile.querySelectorAll('i.icon-docker, i.fa-docker, [data-icon="docker"]');
-    for (var i = 0; i < icons.length; i++) icons[i].remove();
+  function removeUnexpectedHeaderIcons(section, summary) {
+    // The Processor header has no icon of its own; keep only the native metric icons inside the summary.
+    var icons = section.querySelectorAll('i, svg, [class*="icon-"], [class*="fa-"], [data-icon]');
+    for (var i = 0; i < icons.length; i++) {
+      if (!summary.contains(icons[i])) icons[i].remove();
+    }
   }
 
   function metricText(selector) {
@@ -96,12 +98,12 @@ Name="CPU Tile Summary"
     if (document.hidden) return;
     var tile = findCpuTile();
     if (!tile) return;
-    removeDockerIcons(tile);
     var section = tile.querySelector('i.icon-cpu').parentElement.querySelector('div.section');
     if (!section) return;
     var description = ensureDescription(section);
     if (!description) return;
     var summary = section.querySelector('.cpu-tile-summary');
+    removeUnexpectedHeaderIcons(section, summary);
     copyNativeIcons(tile, summary);
 
     // The Dashboard's own chevron indicates whether the Processor tile body is collapsed.
