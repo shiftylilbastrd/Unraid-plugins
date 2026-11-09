@@ -127,16 +127,16 @@ try {
 		$page = replace_once($page, '<td>_(Storage)_</td>', '<td>_(Storage)_</td>' . "\n" . $headerBlock, 'Storage header');
 	}
 	if (strpos($list, 'USAD:BEGIN allocation logic') !== false) {
-		$logicPattern = '/\\t\\t\\/\\* USAD:BEGIN allocation logic \\*\\/.*?\\t\\t\\/\\* USAD:END allocation logic \\*\\/\\n/s';
+		$logicPattern = '/\t\t\/\* USAD:BEGIN allocation logic \*\/.*?\t\t\/\* USAD:END allocation logic \*\/\n/s';
 		if (preg_match_all($logicPattern, $list) !== 1) {
 			throw new RuntimeException('Expected exactly one existing allocation logic block.');
 		}
 		$list = preg_replace_callback($logicPattern, function() use ($logicBlock) {
-			return $logicBlock . "\\n";
+			return $logicBlock . "\n";
 		}, $list, 1);
 	} else {
-		$anchor = "\\tif (array_key_exists(\\$name, \\$ssz1)) {";
-		$list = replace_once($list, $anchor, $logicBlock . "\\n" . $anchor, 'share row');
+		$anchor = "\tif (array_key_exists(\$name, \$ssz1)) {";
+		$list = replace_once($list, $anchor, $logicBlock . "\n" . $anchor, 'share row');
 	}
 	$cacheEcho = 'echo "<td>$cache</td>";';
 	if (substr_count($list, 'USAD:BEGIN allocation cell') === 0) {
