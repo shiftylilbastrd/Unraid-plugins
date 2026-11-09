@@ -1,0 +1,18 @@
+# Corsair PSU Center with Dashboard tile
+
+This combined plugin builds on [Corsair PSU Center by racoutlaw](https://github.com/racoutlaw/corsair-psu-center) and adds a native Unraid Dashboard tile using the kernel `corsair-psu` hwmon status API.
+
+It automatically detects supported Corsair HXi/RMi supplies and includes the full PSU Center page: rail sensors, live charts, energy history, fan control, and OCP controls. The tile shows output power, VRM temperature, and load while collapsed. Expand it for rail readings, temperatures, fan speed, efficiency, and input power. The gear opens the full Corsair PSU Center page.
+
+## Install or migrate
+
+1. In **Plugins**, remove the old **Corsair PSU Statistics** plugin first to prevent its legacy USB polling from conflicting with the new plugin.
+2. In **Plugins → Install Plugin**, install:
+
+   `https://raw.githubusercontent.com/shiftylilbastrd/Unraid-plugins/main/corsairpsucenter/corsairpsucenter.plg`
+
+3. Reload the Dashboard. Open **Corsair PSU Center** from the Tasks menu for the full page.
+
+Requires Unraid 6.12 or newer. The installer downloads the pinned upstream package and verifies its MD5 checksum. The package includes its own Python runtime. The dashboard integration is maintained in this folder.
+
+Distributed under GPL-2.0. The application and package are by racoutlaw; the dashboard tile and integration manifest are maintained here.
