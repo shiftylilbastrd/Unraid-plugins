@@ -2,13 +2,14 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name "user-share-array-disk-allocation">
 <!ENTITY author "shiftylilbastrd">
-<!ENTITY version "2026.11.09.2">
+<!ENTITY version "2026.11.09.3">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/shiftylilbastrd/Unraid-plugins/main/user-share-array-disk-allocation/user-share-array-disk-allocation.plg">
 <!ENTITY plugdir "/usr/local/emhttp/plugins/&name;">
 ]>
-<PLUGIN name="&name;" author="&author;" version="&version;" pluginURL="&pluginURL;" icon="hdd" min="7.3.0" support="https://github.com/shiftylilbastrd/Unraid-plugins/tree/main/user-share-array-disk-allocation">
+<PLUGIN name="&name;" author="&author;" version="&version;" pluginURL="&pluginURL;" icon="fa-hdd-o" min="7.3.0" support="https://github.com/shiftylilbastrd/Unraid-plugins/tree/main/user-share-array-disk-allocation">
 <CHANGES>
-###2026.11.09.2
+###2026.11.09.3
+- Matches the compact title style used by other plugins and adds Unraid’s native hard drive icon.
 - Counts mounted array disks only and correctly replaces the previous patch when upgrading.
 - Shows “All” when every mounted array disk is eligible.
 - Counts only mounted array disks, so empty slots are not listed.
@@ -162,7 +163,7 @@ try {
 ]]></INLINE></FILE>
 <FILE Run="/bin/bash"><INLINE><![CDATA[
 cat > /usr/local/emhttp/plugins/user-share-array-disk-allocation/README.md <<'USAD_README'
-# User share array disk allocation
+**User share array disk allocation**
 
 Adds an **Array disks** column immediately to the right of **Storage** in Unraid's existing **Shares → User Shares** table.
 
