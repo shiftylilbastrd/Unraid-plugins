@@ -17,7 +17,10 @@ $logicBlock = <<<'BLOCK'
 		/* USAD:BEGIN allocation logic */
 		$usadDiskNumbers = [];
 		$include = $share['include'] ?? '';
-		if (($share['useCache'] ?? '') !== 'only') {
+		$usadUseCache = $share['useCache'] ?? '';
+		$usadArrayTarget = ($usadUseCache === 'no')
+			|| (in_array($usadUseCache, ['yes', 'prefer'], true) && empty($share['cachePool2']));
+		if ($usadArrayTarget) {
 			$usadAllowedDiskNames = array_filter(
 				array_diff($myDisks, explode(',', $share['exclude'] ?? '')),
 				'shareInclude'
