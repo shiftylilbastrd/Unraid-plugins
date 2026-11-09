@@ -20,9 +20,16 @@ $logicBlock = <<<'BLOCK'
 		$usadUseCache = $share['useCache'] ?? '';
 		$usadArrayTarget = ($usadUseCache === 'no')
 			|| (in_array($usadUseCache, ['yes', 'prefer'], true) && empty($share['cachePool2']));
+		$usadArrayDiskNames = [];
+		foreach ($disks as $usadDiskName => $usadDiskInfo) {
+			if (preg_match('/^disk[0-9]+$/', (string)$usadDiskName)
+				&& ($usadDiskInfo['fsStatus'] ?? '') === 'Mounted') {
+				$usadArrayDiskNames[] = $usadDiskName;
+			}
+		}
 		if ($usadArrayTarget) {
 			$usadAllowedDiskNames = array_filter(
-				array_diff($myDisks, explode(',', $share['exclude'] ?? '')),
+				array_diff(array_intersect($myDisks, $usadArrayDiskNames), explode(',', $share['exclude'] ?? '')),
 				'shareInclude'
 			);
 			foreach ($usadAllowedDiskNames as $usadDiskName) {
@@ -33,13 +40,7 @@ $logicBlock = <<<'BLOCK'
 		}
 		$usadDiskNumbers = array_values(array_unique($usadDiskNumbers));
 		sort($usadDiskNumbers, SORT_NUMERIC);
-		$usadArrayDiskCount = 0;
-		foreach ($myDisks as $usadCandidateDisk) {
-			if (preg_match('/^disk[0-9]+$/', (string)$usadCandidateDisk)) {
-				$usadArrayDiskCount++;
-			}
-		}
-		$usadDisplay = ($usadArrayDiskCount > 0 && count($usadDiskNumbers) === $usadArrayDiskCount)
+		$usadDisplay = (count($usadArrayDiskNames) > 0 && count($usadDiskNumbers) === count($usadArrayDiskNames))
 			? 'All'
 			: implode(', ', $usadDiskNumbers);
 		$usadDiskList = htmlspecialchars($usadDisplay, ENT_QUOTES, 'UTF-8');
@@ -103,9 +104,17 @@ try {
 	if (strpos($page, 'USAD:BEGIN header') === false) {
 		$page = replace_once($page, '<td>_(Storage)_</td>', '<td>_(Storage)_</td>' . "\n" . $headerBlock, 'Storage header');
 	}
-	if (strpos($list, 'USAD:BEGIN allocation logic') === false) {
-		$anchor = "\tif (array_key_exists(\$name, \$ssz1)) {";
-		$list = replace_once($list, $anchor, $logicBlock . "\n" . $anchor, 'share row');
+	if (strpos($list, 'USAD:BEGIN allocation logic') !== false) {
+		$logicPattern = '/\\t\\t\\/\\* USAD:BEGIN allocation logic \\*\\/.*?\\t\\t\\/\\* USAD:END allocation logic \\*\\/\\n/s';
+		if (preg_match_all($logicPattern, $list) !== 1) {
+			throw new RuntimeException('Expected exactly one existing allocation logic block.');
+		}
+		$list = preg_replace_callback($logicPattern, function() use ($logicBlock) {
+			return $logicBlock . "\\n";
+		}, $list, 1);
+	} else {
+		$anchor = "\\tif (array_key_exists(\\$name, \\$ssz1)) {";
+		$list = replace_once($list, $anchor, $logicBlock . "\\n" . $anchor, 'share row');
 	}
 	$cacheEcho = 'echo "<td>$cache</td>";';
 	if (substr_count($list, 'USAD:BEGIN allocation cell') === 0) {
