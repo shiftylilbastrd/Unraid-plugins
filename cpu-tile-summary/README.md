@@ -1,4 +1,3 @@
-Attempting to perform the InitializeDefaultDrives operation on the 'FileSystem' provider failed.
 # CPU Tile Summary for Unraid
 
 For Unraid 7.3.4. This plugin changes the **existing Processor tile description**: when the tile is collapsed, the CPU model description is replaced by total power, temperature, and overall load with a small load bar. Expanding the tile restores the CPU model description. It does not create a tile or add a separate row.
