@@ -2,13 +2,14 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name "user-share-array-disk-allocation">
 <!ENTITY author "shiftylilbastrd">
-<!ENTITY version "2026.11.09.3">
+<!ENTITY version "2026.11.09.4">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/shiftylilbastrd/Unraid-plugins/main/user-share-array-disk-allocation/user-share-array-disk-allocation.plg">
 <!ENTITY plugdir "/usr/local/emhttp/plugins/&name;">
 ]>
 <PLUGIN name="&name;" author="&author;" version="&version;" pluginURL="&pluginURL;" icon="fa-hdd-o" min="7.3.0" support="https://github.com/shiftylilbastrd/Unraid-plugins/tree/main/user-share-array-disk-allocation">
 <CHANGES>
-###2026.11.09.3
+###2026.11.09.4
+- Compresses consecutive disk numbers into ranges, such as `1-4,6-8`.
 - Matches the compact title style used by other plugins and adds Unraid’s native hard drive icon.
 - Counts mounted array disks only and correctly replaces the previous patch when upgrading.
 - Shows “All” when every mounted array disk is eligible.
@@ -65,9 +66,27 @@ $logicBlock = <<<'BLOCK'
 		}
 		$usadDiskNumbers = array_values(array_unique($usadDiskNumbers));
 		sort($usadDiskNumbers, SORT_NUMERIC);
+		$usadRanges = [];
+		if ($usadDiskNumbers) {
+			$usadRangeStart = $usadRangeEnd = $usadDiskNumbers[0];
+			for ($usadIndex = 1; $usadIndex < count($usadDiskNumbers); $usadIndex++) {
+				$usadNumber = $usadDiskNumbers[$usadIndex];
+				if ($usadNumber === $usadRangeEnd + 1) {
+					$usadRangeEnd = $usadNumber;
+					continue;
+				}
+				$usadRanges[] = ($usadRangeStart === $usadRangeEnd)
+					? (string)$usadRangeStart
+					: $usadRangeStart . '-' . $usadRangeEnd;
+				$usadRangeStart = $usadRangeEnd = $usadNumber;
+			}
+			$usadRanges[] = ($usadRangeStart === $usadRangeEnd)
+				? (string)$usadRangeStart
+				: $usadRangeStart . '-' . $usadRangeEnd;
+		}
 		$usadDisplay = (count($usadArrayDiskNames) > 0 && count($usadDiskNumbers) === count($usadArrayDiskNames))
 			? 'All'
-			: implode(', ', $usadDiskNumbers);
+			: implode(',', $usadRanges);
 		$usadDiskList = htmlspecialchars($usadDisplay, ENT_QUOTES, 'UTF-8');
 		/* USAD:END allocation logic */
 BLOCK;
@@ -167,7 +186,7 @@ cat > /usr/local/emhttp/plugins/user-share-array-disk-allocation/README.md <<'US
 
 Adds an **Array disks** column immediately to the right of **Storage** in Unraid's existing **Shares → User Shares** table.
 
-The column lists allowed array disk numbers, such as `1, 3, 5`, or shows `All` when every mounted array disk is eligible. It is blank when the share has no eligible array disks, including pool-only shares. The value reflects the effective global and per-share include/exclude disk rules together with the share's storage configuration, not the current location of files.
+The column compresses consecutive allowed array disk numbers into ranges, such as `1-4,6-8`, and shows `All` when every mounted array disk is eligible. It is blank when the share has no eligible array disks, including pool-only shares. The value reflects the effective global and per-share include/exclude disk rules together with the share's storage configuration, not the current location of files.
 
 Requires Unraid 7.3.0 or newer. The plugin extends Unraid's built-in Shares table and reapplies its marked changes at boot; a future WebGUI redesign may require a plugin update.
 USAD_README
