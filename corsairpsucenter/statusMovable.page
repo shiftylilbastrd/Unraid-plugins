@@ -10,29 +10,75 @@ $mytiles[$pluginname]['column2'] =
   <tr><td><span class="tile-header">
     <span class="tile-header-left"><i class="icon-ups f32"></i><div class="section">
       <h3 class="tile-header-main">Power Supply</h3>
-      <span class="cpcdash-model">Corsair PSU</span>
-      <span class="cpcdash-summary"><i class="fa fa-bolt"></i> <span class="cpcdash-power">--</span> W &nbsp; <i class="fa fa-thermometer-half"></i> <span class="cpcdash-temp">--</span> &deg;C &nbsp; Load: <span class="cpcdash-load">--</span>%</span>
+      <span class="cpcdash-summary"><i class="fa fa-bolt" title="Output power"></i> <span class="cpcdash-power">--</span> W
+        &nbsp; <i class="fa fa-thermometer-half" title="Temperature"></i> <span class="cpcdash-temp">--</span> &deg;C
+        &nbsp; Load: <span class="cpcdash-load">--</span>%</span>
     </div></span>
-    <span class="tile-header-right"><span class="tile-header-right-controls"><a href="/Tasks/CorsairPSUCenter" title="Open Corsair PSU Center"><i class="fa fa-fw fa-cog control"></i></a></span></span>
+    <span class="tile-header-right"><span class="tile-header-right-controls">
+      <a href="/Settings/CorsairPSUCenter" title="Open Corsair PSU Center"><i class="fa fa-fw fa-cog control"></i></a>
+    </span></span>
   </span></td></tr>
-  <tr><td><span class="w26 header">12V</span><span class="w26 header">5V</span><span class="w26 header">3.3V</span></td></tr>
-  <tr><td><span class="w26"><span class="cpcdash-v12">--</span> V &nbsp; <span class="cpcdash-p12">--</span> W</span><span class="w26"><span class="cpcdash-v5">--</span> V &nbsp; <span class="cpcdash-p5">--</span> W</span><span class="w26"><span class="cpcdash-v33">--</span> V &nbsp; <span class="cpcdash-p33">--</span> W</span></td></tr>
-  <tr><td><span class="w26">VRM / Case temperature</span><span class="w26"><span class="cpcdash-vrm">--</span> / <span class="cpcdash-case">--</span> &deg;C</span><span class="w26">Fan: <span class="cpcdash-fan">--</span> RPM</span></td></tr>
-  <tr><td><span class="w26">Efficiency / Input</span><span class="w26"><span class="cpcdash-eff">--</span>%</span><span class="w26"><span class="cpcdash-vin">--</span> V / <span class="cpcdash-pin">--</span> W</span></td></tr>
+  <tr><td>
+    <span class="w26 header cpcdash-railhead">12V UTILIZATION</span>
+    <span class="w26 header cpcdash-railhead">5V UTILIZATION</span>
+    <span class="w26 header cpcdash-railhead">3.3V UTILIZATION</span>
+  </td></tr>
+  <tr><td>
+    <span class="w26"><span class="cpcdash-l12">--</span>% (<span class="cpcdash-p12">--</span>W)</span>
+    <span class="w26"><span class="cpcdash-l5">--</span>% (<span class="cpcdash-p5">--</span>W)</span>
+    <span class="w26"><span class="cpcdash-l33">--</span>% (<span class="cpcdash-p33">--</span>W)</span>
+  </td></tr>
+  <tr><td>
+    <span class="w26">Temperature / Fan</span>
+    <span class="w26"><span class="cpcdash-vrm">--</span> / <span class="cpcdash-case">--</span> &deg;C</span>
+    <span class="w26"><span class="cpcdash-fan">--</span> RPM</span>
+  </td></tr>
+  <tr><td>
+    <span class="w26">Efficiency / Supply</span>
+    <span class="w26"><span class="cpcdash-eff">--</span>%</span>
+    <span class="w26"><span class="cpcdash-vin">--</span>V (<span class="cpcdash-pin">--</span>W)</span>
+  </td></tr>
+  <tr><td>
+    <span class="w26">Power Supply</span>
+    <span class="w72"><span class="cpcdash-model">--</span> (<span class="cpcdash-capacity">--</span>W)</span>
+  </td></tr>
 </tbody>
 EOT;
 ?>
+<style>.cpcdash-railhead { text-decoration: underline; }</style>
 <script>
 (function(){
-  function put(selector,value,digits){var n=Number(value);var s=(value===null||value===undefined||value===''||!Number.isFinite(n))?'--':(digits===undefined?String(n):n.toFixed(digits));document.querySelectorAll(selector).forEach(function(e){e.textContent=s;});}
-  function txt(selector,value){document.querySelectorAll(selector).forEach(function(e){e.textContent=value;});}
-  function clear(){['.cpcdash-power','.cpcdash-temp','.cpcdash-load','.cpcdash-v12','.cpcdash-p12','.cpcdash-v5','.cpcdash-p5','.cpcdash-v33','.cpcdash-p33','.cpcdash-vrm','.cpcdash-case','.cpcdash-fan','.cpcdash-eff','.cpcdash-vin','.cpcdash-pin'].forEach(function(s){put(s,null);});}
-  function refresh(){ $.getJSON('/plugins/corsairpsucenter/api.php?action=status',function(d){
-    if(!d||!d.connected){txt('.cpcdash-model','No PSU detected');clear();return;}
-    txt('.cpcdash-model',d.model||'Corsair PSU');put('.cpcdash-power',d.power_out,0);put('.cpcdash-temp',d.temp_vrm,0);put('.cpcdash-load',d.load_pct,0);
-    put('.cpcdash-v12',d.v_12,2);put('.cpcdash-p12',d.p_12,0);put('.cpcdash-v5',d.v_5,2);put('.cpcdash-p5',d.p_5,0);put('.cpcdash-v33',d.v_33,2);put('.cpcdash-p33',d.p_33,0);
-    put('.cpcdash-vrm',d.temp_vrm,1);put('.cpcdash-case',d.temp_case,1);put('.cpcdash-fan',d.fan_rpm,0);put('.cpcdash-eff',d.efficiency,1);put('.cpcdash-vin',d.v_in,0);put('.cpcdash-pin',d.power_in,0);
-  }).fail(function(){txt('.cpcdash-model','PSU status unavailable');});}
+  function put(selector,value,digits){
+    var n=Number(value);
+    var result=(value===null||value===undefined||value===''||!Number.isFinite(n))?'--':(digits===undefined?String(n):n.toFixed(digits));
+    document.querySelectorAll(selector).forEach(function(el){el.textContent=result;});
+  }
+  function text(selector,value){document.querySelectorAll(selector).forEach(function(el){el.textContent=value;});}
+  function clear(){
+    ['.cpcdash-power','.cpcdash-temp','.cpcdash-load','.cpcdash-l12','.cpcdash-p12',
+     '.cpcdash-l5','.cpcdash-p5','.cpcdash-l33','.cpcdash-p33','.cpcdash-vrm',
+     '.cpcdash-case','.cpcdash-fan','.cpcdash-eff','.cpcdash-vin','.cpcdash-pin',
+     '.cpcdash-capacity'].forEach(function(s){put(s,null);});
+    text('.cpcdash-model','No PSU detected');
+  }
+  function railLoad(power,capacity,selector){
+    if(power===null||capacity===null||!Number.isFinite(Number(power))||
+       !Number.isFinite(Number(capacity))||Number(capacity)<=0) put(selector,null);
+    else put(selector,Number(power)/Number(capacity)*100,0);
+  }
+  function refresh(){
+    $.getJSON('/plugins/corsairpsucenter/api.php?action=status',function(data){
+      if(!data||!data.connected){clear();return;}
+      text('.cpcdash-model',data.model||'Corsair PSU');put('.cpcdash-capacity',data.capacity,0);
+      put('.cpcdash-power',data.power_out,0);put('.cpcdash-temp',data.temp_vrm,0);put('.cpcdash-load',data.load_pct,0);
+      put('.cpcdash-p12',data.p_12,0);railLoad(data.p_12,data.capacity,'.cpcdash-l12');
+      put('.cpcdash-p5',data.p_5,1);railLoad(data.p_5,data.capacity,'.cpcdash-l5');
+      put('.cpcdash-p33',data.p_33,1);railLoad(data.p_33,data.capacity,'.cpcdash-l33');
+      put('.cpcdash-vrm',data.temp_vrm,1);put('.cpcdash-case',data.temp_case,1);
+      put('.cpcdash-fan',data.fan_rpm,0);put('.cpcdash-eff',data.efficiency,1);
+      put('.cpcdash-vin',data.v_in,0);put('.cpcdash-pin',data.power_in,0);
+    }).fail(function(){text('.cpcdash-model','PSU status unavailable');});
+  }
   refresh();window.setInterval(refresh,2000);
 })();
 </script>
