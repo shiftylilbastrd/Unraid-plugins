@@ -17,7 +17,7 @@ Name="CPU Tile Summary"
 .cpu-tile-summary .cpu-summary-load { display: inline-flex; align-items: center; gap: 5px; }
 .cpu-tile-summary .cpu-summary-bar {
   display: inline-block;
-  width: 50px;
+  width: 90px;
   height: 10px;
   background: rgba(128,128,128,.22);
   vertical-align: middle;
