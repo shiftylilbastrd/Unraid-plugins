@@ -2,13 +2,14 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name "user-share-array-disk-allocation">
 <!ENTITY author "shiftylilbastrd">
-<!ENTITY version "2026.11.08">
+<!ENTITY version "2026.11.08.2">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/shiftylilbastrd/Unraid-plugins/main/user-share-array-disk-allocation/user-share-array-disk-allocation.plg">
 <!ENTITY plugdir "/usr/local/emhttp/plugins/&name;">
 ]>
 <PLUGIN name="&name;" author="&author;" version="&version;" pluginURL="&pluginURL;" icon="hdd" min="7.3.0" support="https://github.com/shiftylilbastrd/Unraid-plugins/tree/main/user-share-array-disk-allocation">
 <CHANGES>
-###2026.11.08
+###2026.11.08.2
+- Lists disks only when the share storage configuration can use the array.
 - Adds an Array disks column beside Storage in Shares → User Shares.
 - Shows effective allowed array disk numbers; leaves the cell blank when no array disks are eligible.
 </CHANGES>
@@ -33,7 +34,10 @@ $logicBlock = <<<'BLOCK'
 		/* USAD:BEGIN allocation logic */
 		$usadDiskNumbers = [];
 		$include = $share['include'] ?? '';
-		if (($share['useCache'] ?? '') !== 'only') {
+		$usadUseCache = $share['useCache'] ?? '';
+		$usadArrayTarget = ($usadUseCache === 'no')
+			|| (in_array($usadUseCache, ['yes', 'prefer'], true) && empty($share['cachePool2']));
+		if ($usadArrayTarget) {
 			$usadAllowedDiskNames = array_filter(
 				array_diff($myDisks, explode(',', $share['exclude'] ?? '')),
 				'shareInclude'
