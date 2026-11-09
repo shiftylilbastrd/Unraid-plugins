@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
-<PLUGIN name="cpu-tile-summary" author="shiftylilbastrd" version="0.1.4" pluginURL="https://raw.githubusercontent.com/shiftylilbastrd/Unraid-plugins/main/cpu-tile-summary/cpu-tile-summary.plg" icon="icon-cpu" min="7.0.0">
+<PLUGIN name="cpu-tile-summary" author="shiftylilbastrd" version="0.1.5" pluginURL="https://raw.githubusercontent.com/shiftylilbastrd/Unraid-plugins/main/cpu-tile-summary/cpu-tile-summary.plg" icon="icon-cpu" min="7.0.0">
   <CHANGES>
   ### 2026.11.08
+  - Publishes a clean, versioned installer URL to avoid stale cached downloads.
   - Moves the plugin into its own folder in the Unraid-plugins repository.
   - Updates the install/update URL for the new repository layout.
   - Keeps the native CPU icon and Plugins-page description.
