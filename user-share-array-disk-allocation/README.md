@@ -2,7 +2,7 @@
 
 Adds an **Array disks** column immediately to the right of **Storage** in Unraid's existing **Shares → User Shares** table.
 
-The column lists allowed array disk numbers, such as `1, 3, 5`, or shows `All` when every mounted array disk is eligible. It is blank when the share has no eligible array disks, including pool-only shares. The value is calculated from Unraid's global and per-share include/exclude disk rules, not from the share's current file locations. The storage placement rules and the included/excluded disk lists are separate parts of Unraid share configuration; this column reports the effective eligible array disks.
+The column compresses consecutive allowed array disk numbers into ranges, such as `1-4,6-8`, and shows `All` when every mounted array disk is eligible. It is blank when the share has no eligible array disks, including pool-only shares. The value is calculated from Unraid's global and per-share include/exclude disk rules, not from the share's current file locations. The storage placement rules and the included/excluded disk lists are separate parts of Unraid share configuration; this column reports the effective eligible array disks.
 
 ## Install
 
