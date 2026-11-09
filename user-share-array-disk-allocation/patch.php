@@ -33,7 +33,16 @@ $logicBlock = <<<'BLOCK'
 		}
 		$usadDiskNumbers = array_values(array_unique($usadDiskNumbers));
 		sort($usadDiskNumbers, SORT_NUMERIC);
-		$usadDiskList = htmlspecialchars(implode(', ', $usadDiskNumbers), ENT_QUOTES, 'UTF-8');
+		$usadArrayDiskCount = 0;
+		foreach ($myDisks as $usadCandidateDisk) {
+			if (preg_match('/^disk[0-9]+$/', (string)$usadCandidateDisk)) {
+				$usadArrayDiskCount++;
+			}
+		}
+		$usadDisplay = ($usadArrayDiskCount > 0 && count($usadDiskNumbers) === $usadArrayDiskCount)
+			? 'All'
+			: implode(', ', $usadDiskNumbers);
+		$usadDiskList = htmlspecialchars($usadDisplay, ENT_QUOTES, 'UTF-8');
 		/* USAD:END allocation logic */
 BLOCK;
 $cellBlock = <<<'BLOCK'
