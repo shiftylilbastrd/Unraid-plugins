@@ -11,3 +11,15 @@ Install from **Plugins → Install Plugin** with:
 ```text
 https://raw.githubusercontent.com/shiftylilbastrd/Unraid-plugins/main/cpu-tile-summary/cpu-tile-summary.plg
 ```
+
+## Corsair PSU
+
+A maintained fork that fixes the dashboard tile controls and 12V rail reporting.
+
+Install from **Plugins → Install Plugin**:
+
+```text
+https://raw.githubusercontent.com/shiftylilbastrd/Unraid-plugins/main/corsairpsu/corsairpsu.plg
+```
+
+Source and details: [`corsairpsu/`](corsairpsu/).
