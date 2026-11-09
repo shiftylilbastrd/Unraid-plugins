@@ -150,7 +150,7 @@ USAD_README
 ]]></INLINE></FILE>
 <FILE Run="/bin/bash" Method="remove"><INLINE><![CDATA[
 if [ -f "&plugdir;/patch-&version;.php" ]; then
-  /usr/bin/php "&plugdir;/patch.php" remove || exit 1
+  /usr/bin/php "&plugdir;/patch-&version;.php" remove || exit 1
 fi
 rm -rf "&plugdir;"
 rm -f "/boot/config/plugins/&name;.plg"
