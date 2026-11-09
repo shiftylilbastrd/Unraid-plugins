@@ -1,4 +1,4 @@
-# User share array disk allocation
+**User share array disk allocation**
 
 Adds an **Array disks** column immediately to the right of **Storage** in Unraid's existing **Shares → User Shares** table.
 
