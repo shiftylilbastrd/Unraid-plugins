@@ -13,8 +13,10 @@
 - Adds an Array disks column beside Storage in Shares → User Shares.
 - Shows effective allowed array disk numbers; leaves the cell blank when no array disks are eligible.
 </CHANGES>
-<FILE Run="/bin/mkdir -p &plugdir;"/>
-<FILE Name="&plugdir;/patch.php"><INLINE><![CDATA[
+<FILE Run="/bin/bash"><INLINE><![CDATA[
+rm -f /usr/local/emhttp/plugins/user-share-array-disk-allocation/patch-*.php
+]]></INLINE></FILE>
+<FILE Name="&plugdir;/patch-&version;.php" Run="/usr/bin/php"><INLINE><![CDATA[
 <?php
 /*
  * User share array disk allocation
@@ -135,9 +137,8 @@ try {
 }
 
 ]]></INLINE></FILE>
-<FILE Run="/usr/bin/php &plugdir;/patch.php"/>
 <FILE Run="/bin/bash" Method="remove"><INLINE><![CDATA[
-if [ -f "&plugdir;/patch.php" ]; then
+if [ -f "&plugdir;/patch-&version;.php" ]; then
   /usr/bin/php "&plugdir;/patch.php" remove || exit 1
 fi
 rm -rf "&plugdir;"
