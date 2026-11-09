@@ -81,6 +81,12 @@ Name="CPU Tile Summary"
     }
   }
 
+  function removeDockerIcons(tile) {
+    // No Docker icon belongs in the Processor tile; remove one injected there by another dashboard hook.
+    var icons = tile.querySelectorAll('i.icon-docker, i.fa-docker, [data-icon="docker"]');
+    for (var i = 0; i < icons.length; i++) icons[i].remove();
+  }
+
   function metricText(selector) {
     var element = document.querySelector(selector);
     return element ? element.textContent.trim() : '';
@@ -90,6 +96,7 @@ Name="CPU Tile Summary"
     if (document.hidden) return;
     var tile = findCpuTile();
     if (!tile) return;
+    removeDockerIcons(tile);
     var section = tile.querySelector('i.icon-cpu').parentElement.querySelector('div.section');
     if (!section) return;
     var description = ensureDescription(section);
