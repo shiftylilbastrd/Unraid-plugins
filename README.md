@@ -21,3 +21,13 @@ Install from **Plugins → Install Plugin**:
 ```text
 https://raw.githubusercontent.com/shiftylilbastrd/Unraid-plugins/main/corsairpsucenter/corsairpsucenter.plg
 ```
+
+## User share array disk allocation
+
+Adds an **Array disks** column to Shares → User Shares, showing each share's effective allowed array disk numbers. The plugin details and installer are in [`user-share-array-disk-allocation/`](user-share-array-disk-allocation/).
+
+Install from **Plugins → Install Plugin**:
+
+```text
+https://raw.githubusercontent.com/shiftylilbastrd/Unraid-plugins/main/user-share-array-disk-allocation/user-share-array-disk-allocation.plg
+```
