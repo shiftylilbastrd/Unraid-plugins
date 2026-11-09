@@ -1,21 +1,16 @@
-# CPU Tile Summary for Unraid
+Attempting to perform the InitializeDefaultDrives operation on the 'FileSystem' provider failed.
+# Unraid Plugins
 
-For Unraid 7.3.4. This plugin changes the **existing Processor tile description**: when that tile is collapsed, the CPU model description is replaced by total power, temperature, and overall load with a small load bar. Expanding the tile restores the CPU model description. It does not create a tile or add a separate row.
+A collection of small plugins and WebGUI enhancements for Unraid.
 
-The plugin reuses the live values already rendered by Unraid in the expanded Processor tile, so units and sensor support stay consistent with Unraid. If a value is unavailable in the native tile, the compact description displays a dash.
+## CPU Tile Summary
 
-## Install from GitHub
+Shows CPU power, temperature, and overall load in the collapsed Processor tile description. The source and installer are in [`cpu-tile-summary/`](cpu-tile-summary/).
 
-In Unraid, open **Plugins → Install Plugin**, paste this URL, and click **Install**:
+Install from **Plugins → Install Plugin** with:
 
 ```text
-https://raw.githubusercontent.com/shiftylilbastrd/Unraid-Dashboard/main/cpu-tile-summary.plg
+https://raw.githubusercontent.com/shiftylilbastrd/Unraid-plugins/main/cpu-tile-summary/cpu-tile-summary.plg
 ```
 
-Hard-refresh the Dashboard with **Ctrl+F5** after installation. The manifest is self-contained and embeds the page hook.
-
-## Remove
-
-Use the plugin's **Remove** action from the Plugins page, then refresh the Dashboard. It restores the standard tile because the plugin only injects browser-side code and does not edit Unraid's core files.
-
-The hook uses the WebGUI `Menu="Buttons"` page mechanism and the Dashboard's CPU marker. The Dashboard source exposes the power, temperature, and aggregate load values used by this plugin: [Unraid WebGUI `DashStats.page`](https://github.com/unraid/webgui/blob/master/emhttp/plugins/dynamix/DashStats.page).
+The top-level `cpu-tile-summary.plg` is retained as a compatibility installer for systems that installed the plugin before the repository was reorganized. New installs should use the folder URL above.
