@@ -48,7 +48,7 @@ for pkg in /var/lib/pkgtools/packages/corsairpsucenter-*; do
   [ -e "$pkg" ] && removepkg "$(basename "$pkg")" >/dev/null 2>&1 || true
 done
 rm -rf /usr/local/emhttp/plugins/corsairpsucenter
-rm -f /boot/config/plugins/corsairpsucenter/*.txz /boot/config/plugins/corsairpsucenter/corsairpsucenter.plg
+rm -f /boot/config/plugins/corsairpsucenter/*.txz /boot/config/plugins/corsairpsucenter.plg
 echo "Corsair PSU Center removed. Saved settings and energy history remain."
 ]]></INLINE></FILE>
 </PLUGIN>
