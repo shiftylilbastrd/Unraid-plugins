@@ -9,5 +9,5 @@ Shows CPU power, temperature, and overall load in the collapsed Processor tile d
 Install from **Plugins → Install Plugin** with:
 
 ```text
-https://raw.githubusercontent.com/shiftylilbastrd/Unraid-plugins/main/cpu-tile-summary/cpu-tile-summary-0.1.6.plg
+https://raw.githubusercontent.com/shiftylilbastrd/Unraid-plugins/main/cpu-tile-summary/cpu-tile-summary-0.1.7.plg
 ```
