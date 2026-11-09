@@ -1,0 +1,54 @@
+<?xml version='1.0' standalone='yes'?>
+<!DOCTYPE PLUGIN [
+<!ENTITY name "corsairpsucenter">
+<!ENTITY author "shiftylilbastrd">
+<!ENTITY version "2026.11.08">
+<!ENTITY launch "CorsairPSUCenter">
+<!ENTITY gitURL "https://raw.githubusercontent.com/shiftylilbastrd/Unraid-plugins/main/corsairpsucenter">
+<!ENTITY pluginURL "&gitURL;/&name;.plg">
+<!ENTITY source "https://raw.githubusercontent.com/racoutlaw/corsair-psu-center/main/archive/corsairpsucenter-2026.09.26-x86_64.txz">
+<!ENTITY md5 "62174c06f6c842db3fb5bb05656a3dee">
+<!ENTITY plugdir "/boot/config/plugins/&name;">
+]>
+<PLUGIN name="&name;" author="&author;" version="&version;" pluginURL="&pluginURL;" launch="&launch;" icon="bolt" min="6.12.0" support="https://github.com/racoutlaw/corsair-psu-center">
+<CHANGES>###2026.11.08
+- Combines Corsair PSU Center auto-detection and monitoring page with a native Unraid Dashboard tile.
+- Dashboard tile shows output power, temperature, load, rail readings, fan speed, efficiency, and input details.
+- Reuses the plugin's kernel hwmon status API for telemetry.
+- Based on Corsair PSU Center by racoutlaw (GPL-2.0).</CHANGES>
+<FILE Run="/bin/bash"><INLINE><![CDATA[
+shopt -s nullglob
+for pidfile in /var/run/corsairpsucenter-fand.pid /var/run/corsairpsucenter-energyd.pid; do
+  if [ -f "$pidfile" ]; then kill "$(cat "$pidfile")" 2>/dev/null || true; rm -f "$pidfile"; fi
+done
+for pkg in /var/lib/pkgtools/packages/corsairpsucenter-*; do
+  [ -e "$pkg" ] && removepkg "$(basename "$pkg")" >/dev/null 2>&1 || true
+done
+exit 0
+]]></INLINE></FILE>
+<FILE Name="&plugdir;/corsairpsucenter-2026.09.26-x86_64.txz" Run="upgradepkg --install-new"><URL>&source;</URL><MD5>&md5;</MD5></FILE>
+<FILE Run="/bin/bash"><INLINE><![CDATA[
+set -eu
+mkdir -p /usr/local/emhttp/plugins/corsairpsucenter
+printf '%s' 'TWVudT0iRGFzaGJvYXJkOjAiCkNvbmQ9InZlcnNpb25fY29tcGFyZShwYXJzZV9pbmlfZmlsZSgnL2V0Yy91bnJhaWQtdmVyc2lvbicpWyd2ZXJzaW9uJ10sJzYuMTIuMC1iZXRhNicsICc+JykiCkljb249InVwcyIKLS0tCjw/cGhwCiRwbHVnaW5uYW1lID0gImNvcnNhaXJwc3VjZW50ZXIiOwokbXl0aWxlc1skcGx1Z2lubmFtZV1bJ2NvbHVtbjInXSA9Cjw8PEVPVAo8dGJvZHkgaWQ9InRibGNvcnNhaXJwc3VjZW50ZXIiIHRpdGxlPSJfKENvcnNhaXIgUFNVKV8iPgogIDx0cj48dGQ+PHNwYW4gY2xhc3M9InRpbGUtaGVhZGVyIj4KICAgIDxzcGFuIGNsYXNzPSJ0aWxlLWhlYWRlci1sZWZ0Ij48aSBjbGFzcz0iaWNvbi11cHMgZjMyIj48L2k+PGRpdiBjbGFzcz0ic2VjdGlvbiI+CiAgICAgIDxoMyBjbGFzcz0idGlsZS1oZWFkZXItbWFpbiI+UG93ZXIgU3VwcGx5PC9oMz4KICAgICAgPHNwYW4gY2xhc3M9ImNwY2Rhc2gtbW9kZWwiPkNvcnNhaXIgUFNVPC9zcGFuPgogICAgICA8c3BhbiBjbGFzcz0iY3BjZGFzaC1zdW1tYXJ5Ij48aSBjbGFzcz0iZmEgZmEtYm9sdCI+PC9pPiA8c3BhbiBjbGFzcz0iY3BjZGFzaC1wb3dlciI+LS08L3NwYW4+IFcgJm5ic3A7IDxpIGNsYXNzPSJmYSBmYS10aGVybW9tZXRlci1oYWxmIj48L2k+IDxzcGFuIGNsYXNzPSJjcGNkYXNoLXRlbXAiPi0tPC9zcGFuPiAmZGVnO0MgJm5ic3A7IExvYWQ6IDxzcGFuIGNsYXNzPSJjcGNkYXNoLWxvYWQiPi0tPC9zcGFuPiU8L3NwYW4+CiAgICA8L2Rpdj48L3NwYW4+CiAgICA8c3BhbiBjbGFzcz0idGlsZS1oZWFkZXItcmlnaHQiPjxzcGFuIGNsYXNzPSJ0aWxlLWhlYWRlci1yaWdodC1jb250cm9scyI+PGEgaHJlZj0iL1Rhc2tzL0NvcnNhaXJQU1VDZW50ZXIiIHRpdGxlPSJPcGVuIENvcnNhaXIgUFNVIENlbnRlciI+PGkgY2xhc3M9ImZhIGZhLWZ3IGZhLWNvZyBjb250cm9sIj48L2k+PC9hPjwvc3Bhbj48L3NwYW4+CiAgPC9zcGFuPjwvdGQ+PC90cj4KICA8dHI+PHRkPjxzcGFuIGNsYXNzPSJ3MjYgaGVhZGVyIj4xMlY8L3NwYW4+PHNwYW4gY2xhc3M9IncyNiBoZWFkZXIiPjVWPC9zcGFuPjxzcGFuIGNsYXNzPSJ3MjYgaGVhZGVyIj4zLjNWPC9zcGFuPjwvdGQ+PC90cj4KICA8dHI+PHRkPjxzcGFuIGNsYXNzPSJ3MjYiPjxzcGFuIGNsYXNzPSJjcGNkYXNoLXYxMiI+LS08L3NwYW4+IFYgJm5ic3A7IDxzcGFuIGNsYXNzPSJjcGNkYXNoLXAxMiI+LS08L3NwYW4+IFc8L3NwYW4+PHNwYW4gY2xhc3M9IncyNiI+PHNwYW4gY2xhc3M9ImNwY2Rhc2gtdjUiPi0tPC9zcGFuPiBWICZuYnNwOyA8c3BhbiBjbGFzcz0iY3BjZGFzaC1wNSI+LS08L3NwYW4+IFc8L3NwYW4+PHNwYW4gY2xhc3M9IncyNiI+PHNwYW4gY2xhc3M9ImNwY2Rhc2gtdjMzIj4tLTwvc3Bhbj4gViAmbmJzcDsgPHNwYW4gY2xhc3M9ImNwY2Rhc2gtcDMzIj4tLTwvc3Bhbj4gVzwvc3Bhbj48L3RkPjwvdHI+CiAgPHRyPjx0ZD48c3BhbiBjbGFzcz0idzI2Ij5WUk0gLyBDYXNlIHRlbXBlcmF0dXJlPC9zcGFuPjxzcGFuIGNsYXNzPSJ3MjYiPjxzcGFuIGNsYXNzPSJjcGNkYXNoLXZybSI+LS08L3NwYW4+IC8gPHNwYW4gY2xhc3M9ImNwY2Rhc2gtY2FzZSI+LS08L3NwYW4+ICZkZWc7Qzwvc3Bhbj48c3BhbiBjbGFzcz0idzI2Ij5GYW46IDxzcGFuIGNsYXNzPSJjcGNkYXNoLWZhbiI+LS08L3NwYW4+IFJQTTwvc3Bhbj48L3RkPjwvdHI+CiAgPHRyPjx0ZD48c3BhbiBjbGFzcz0idzI2Ij5FZmZpY2llbmN5IC8gSW5wdXQ8L3NwYW4+PHNwYW4gY2xhc3M9IncyNiI+PHNwYW4gY2xhc3M9ImNwY2Rhc2gtZWZmIj4tLTwvc3Bhbj4lPC9zcGFuPjxzcGFuIGNsYXNzPSJ3MjYiPjxzcGFuIGNsYXNzPSJjcGNkYXNoLXZpbiI+LS08L3NwYW4+IFYgLyA8c3BhbiBjbGFzcz0iY3BjZGFzaC1waW4iPi0tPC9zcGFuPiBXPC9zcGFuPjwvdGQ+PC90cj4KPC90Ym9keT4KRU9UOwo/Pgo8c2NyaXB0PgooZnVuY3Rpb24oKXsKICBmdW5jdGlvbiBwdXQoc2VsZWN0b3IsdmFsdWUsZGlnaXRzKXt2YXIgbj1OdW1iZXIodmFsdWUpO3ZhciBzPSh2YWx1ZT09PW51bGx8fHZhbHVlPT09dW5kZWZpbmVkfHx2YWx1ZT09PScnfHwhTnVtYmVyLmlzRmluaXRlKG4pKT8nLS0nOihkaWdpdHM9PT11bmRlZmluZWQ/U3RyaW5nKG4pOm4udG9GaXhlZChkaWdpdHMpKTtkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKHNlbGVjdG9yKS5mb3JFYWNoKGZ1bmN0aW9uKGUpe2UudGV4dENvbnRlbnQ9czt9KTt9CiAgZnVuY3Rpb24gdHh0KHNlbGVjdG9yLHZhbHVlKXtkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKHNlbGVjdG9yKS5mb3JFYWNoKGZ1bmN0aW9uKGUpe2UudGV4dENvbnRlbnQ9dmFsdWU7fSk7fQogIGZ1bmN0aW9uIGNsZWFyKCl7WycuY3BjZGFzaC1wb3dlcicsJy5jcGNkYXNoLXRlbXAnLCcuY3BjZGFzaC1sb2FkJywnLmNwY2Rhc2gtdjEyJywnLmNwY2Rhc2gtcDEyJywnLmNwY2Rhc2gtdjUnLCcuY3BjZGFzaC1wNScsJy5jcGNkYXNoLXYzMycsJy5jcGNkYXNoLXAzMycsJy5jcGNkYXNoLXZybScsJy5jcGNkYXNoLWNhc2UnLCcuY3BjZGFzaC1mYW4nLCcuY3BjZGFzaC1lZmYnLCcuY3BjZGFzaC12aW4nLCcuY3BjZGFzaC1waW4nXS5mb3JFYWNoKGZ1bmN0aW9uKHMpe3B1dChzLG51bGwpO30pO30KICBmdW5jdGlvbiByZWZyZXNoKCl7ICQuZ2V0SlNPTignL3BsdWdpbnMvY29yc2FpcnBzdWNlbnRlci9hcGkucGhwP2FjdGlvbj1zdGF0dXMnLGZ1bmN0aW9uKGQpewogICAgaWYoIWR8fCFkLmNvbm5lY3RlZCl7dHh0KCcuY3BjZGFzaC1tb2RlbCcsJ05vIFBTVSBkZXRlY3RlZCcpO2NsZWFyKCk7cmV0dXJuO30KICAgIHR4dCgnLmNwY2Rhc2gtbW9kZWwnLGQubW9kZWx8fCdDb3JzYWlyIFBTVScpO3B1dCgnLmNwY2Rhc2gtcG93ZXInLGQucG93ZXJfb3V0LDApO3B1dCgnLmNwY2Rhc2gtdGVtcCcsZC50ZW1wX3ZybSwwKTtwdXQoJy5jcGNkYXNoLWxvYWQnLGQubG9hZF9wY3QsMCk7CiAgICBwdXQoJy5jcGNkYXNoLXYxMicsZC52XzEyLDIpO3B1dCgnLmNwY2Rhc2gtcDEyJyxkLnBfMTIsMCk7cHV0KCcuY3BjZGFzaC12NScsZC52XzUsMik7cHV0KCcuY3BjZGFzaC1wNScsZC5wXzUsMCk7cHV0KCcuY3BjZGFzaC12MzMnLGQudl8zMywyKTtwdXQoJy5jcGNkYXNoLXAzMycsZC5wXzMzLDApOwogICAgcHV0KCcuY3BjZGFzaC12cm0nLGQudGVtcF92cm0sMSk7cHV0KCcuY3BjZGFzaC1jYXNlJyxkLnRlbXBfY2FzZSwxKTtwdXQoJy5jcGNkYXNoLWZhbicsZC5mYW5fcnBtLDApO3B1dCgnLmNwY2Rhc2gtZWZmJyxkLmVmZmljaWVuY3ksMSk7cHV0KCcuY3BjZGFzaC12aW4nLGQudl9pbiwwKTtwdXQoJy5jcGNkYXNoLXBpbicsZC5wb3dlcl9pbiwwKTsKICB9KS5mYWlsKGZ1bmN0aW9uKCl7dHh0KCcuY3BjZGFzaC1tb2RlbCcsJ1BTVSBzdGF0dXMgdW5hdmFpbGFibGUnKTt9KTt9CiAgcmVmcmVzaCgpO3dpbmRvdy5zZXRJbnRlcnZhbChyZWZyZXNoLDIwMDApOwp9KSgpOwo8L3NjcmlwdD4K' | base64 -d > /usr/local/emhttp/plugins/corsairpsucenter/statusMovable.page
+chmod 644 /usr/local/emhttp/plugins/corsairpsucenter/statusMovable.page
+chmod 755 /usr/local/emhttp/plugins/corsairpsucenter/fand.sh 2>/dev/null || true
+if [ -f /boot/config/plugins/corsairpsucenter/settings.cfg ] && grep -q 'mode="curve"' /boot/config/plugins/corsairpsucenter/settings.cfg; then
+  setsid /usr/local/emhttp/plugins/corsairpsucenter/fand.sh >/dev/null 2>&1 < /dev/null &
+fi
+setsid /usr/bin/php /usr/local/emhttp/plugins/corsairpsucenter/energyd.php >/dev/null 2>&1 < /dev/null &
+echo "Corsair PSU Center with Dashboard tile installed."
+]]></INLINE></FILE>
+<FILE Run="/bin/bash" Method="remove"><INLINE><![CDATA[
+shopt -s nullglob
+for pidfile in /var/run/corsairpsucenter-fand.pid /var/run/corsairpsucenter-energyd.pid; do
+  if [ -f "$pidfile" ]; then kill "$(cat "$pidfile")" 2>/dev/null || true; rm -f "$pidfile"; fi
+done
+for pkg in /var/lib/pkgtools/packages/corsairpsucenter-*; do
+  [ -e "$pkg" ] && removepkg "$(basename "$pkg")" >/dev/null 2>&1 || true
+done
+rm -rf /usr/local/emhttp/plugins/corsairpsucenter
+rm -f /boot/config/plugins/corsairpsucenter/*.txz /boot/config/plugins/corsairpsucenter/corsairpsucenter.plg
+echo "Corsair PSU Center removed. Saved settings and energy history remain."
+]]></INLINE></FILE>
+</PLUGIN>
