@@ -108,9 +108,8 @@ try {
 		$page = replace_once($page, '<td>_(Storage)_</td>', '<td>_(Storage)_</td>' . "\n" . $headerBlock, 'Storage header');
 	}
 	if (strpos($list, 'USAD:BEGIN allocation logic') === false) {
-		$anchor = "if (array_key_exists($name, $ssz1)) {";
-		$logic = str_replace('$name', '\$name', $anchor);
-		$list = replace_once($list, $anchor, $logicBlock . "\n\t" . $anchor, 'share row');
+		$anchor = "\tif (array_key_exists(\$name, \$ssz1)) {";
+		$list = replace_once($list, $anchor, $logicBlock . "\n" . $anchor, 'share row');
 	}
 	$cacheEcho = 'echo "<td>$cache</td>";';
 	if (substr_count($list, 'USAD:BEGIN allocation cell') === 0) {
@@ -118,8 +117,8 @@ try {
 		$list = str_replace($cacheEcho, $cacheEcho . "\n" . $cellBlock, $list);
 	}
 	if (strpos($list, 'USAD:BEGIN detail cell') === false) {
-		$detailAnchor = 'echo "<td>", my_scale($disksize, $unit), " $unit</td>";';
-		$list = replace_once($list, $detailAnchor, $detailBlock . "\n\t\t\t" . $detailAnchor, 'computed disk detail row');
+		$detailAnchor = "\t\t\techo \"<td>\", my_scale(\$disksize, \$unit), \" \$unit</td>\";";
+		$list = replace_once($list, $detailAnchor, $detailBlock . "\n" . $detailAnchor, 'computed disk detail row');
 	}
 
 	/* Write both files only after every source anchor has been confirmed. */
