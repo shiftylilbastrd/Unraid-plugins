@@ -10,8 +10,8 @@ $mytiles[$pluginname]['column2'] =
   <tr><td><span class="tile-header">
     <span class="tile-header-left"><i class="icon-ups f32"></i><div class="section">
       <h3 class="tile-header-main">Power Supply</h3>
-      <span class="cpcdash-summary"><i class="fa fa-bolt" title="Output power"></i> <span class="cpcdash-power">--</span> W
-        &nbsp; <i class="fa fa-thermometer-half" title="Temperature"></i> <span class="cpcdash-temp">--</span> &deg;C
+      <span class="cpcdash-summary"><i class="fa fa-bolt" title="Output power"></i> Power: <span class="cpcdash-power">--</span> W
+        &nbsp; <i class="fa fa-thermometer-half" title="Temperature"></i> Temperature: <span class="cpcdash-temp">--</span> &deg;C
         &nbsp; Load: <span class="cpcdash-load">--</span>%</span>
     </div></span>
     <span class="tile-header-right"><span class="tile-header-right-controls">
