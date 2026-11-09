@@ -55,12 +55,30 @@ Name="CPU Tile Summary"
 
     var summary = document.createElement('span');
     summary.className = 'cpu-tile-summary';
-    summary.innerHTML = '<span class="cpu-summary-item">⚡ Total Power: <span data-metric="power">—</span></span>' +
-      '<span class="cpu-summary-item">🌡 Temperature: <span data-metric="temperature">—</span></span>' +
+    summary.innerHTML = '<span class="cpu-summary-item"><span data-icon="power"></span> Total Power: <span data-metric="power">—</span></span>' +
+      '<span class="cpu-summary-item"><span data-icon="temperature"></span> Temperature: <span data-metric="temperature">—</span></span>' +
       '<span class="cpu-summary-item cpu-summary-load">Overall Load: <span data-metric="load">—</span>' +
       '<span class="cpu-summary-bar"><span class="cpu-summary-fill"></span></span></span>';
     modelDescription.parentNode.insertBefore(summary, modelDescription);
     return modelDescription;
+  }
+
+  function copyNativeIcons(tile, summary) {
+    var powerTarget = summary.querySelector('[data-icon="power"]');
+    if (!powerTarget.firstChild) {
+      var nativePowerIcon = tile.querySelector('#cpu-total-power i.fa-plug');
+      if (nativePowerIcon) powerTarget.appendChild(nativePowerIcon.cloneNode(true));
+    }
+
+    var temperatureTarget = summary.querySelector('[data-icon="temperature"]');
+    if (!temperatureTarget.firstChild) {
+      var temperatureValue = tile.querySelector('#cpu-temp0, [id^="cpu-temp"]');
+      var nativeTemperatureIcon = temperatureValue && temperatureValue.closest('.head_info, tr, td')
+        ? temperatureValue.closest('.head_info, tr, td').querySelector('i.fa-thermometer')
+        : null;
+      if (!nativeTemperatureIcon) nativeTemperatureIcon = tile.querySelector('i.fa-thermometer');
+      if (nativeTemperatureIcon) temperatureTarget.appendChild(nativeTemperatureIcon.cloneNode(true));
+    }
   }
 
   function metricText(selector) {
@@ -77,6 +95,7 @@ Name="CPU Tile Summary"
     var description = ensureDescription(section);
     if (!description) return;
     var summary = section.querySelector('.cpu-tile-summary');
+    copyNativeIcons(tile, summary);
 
     // The Dashboard's own chevron indicates whether the Processor tile body is collapsed.
     var toggle = tile.querySelector('.openclose');
