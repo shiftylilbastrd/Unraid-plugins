@@ -1,0 +1,38 @@
+Menu="Dashboard:0"
+Cond="version_compare(parse_ini_file('/etc/unraid-version')['version'],'6.12.0-beta6', '>')"
+Icon="ups"
+---
+<?php
+$pluginname = "corsairpsucenter";
+$mytiles[$pluginname]['column2'] =
+<<<EOT
+<tbody id="tblcorsairpsucenter" title="_(Corsair PSU)_">
+  <tr><td><span class="tile-header">
+    <span class="tile-header-left"><i class="icon-ups f32"></i><div class="section">
+      <h3 class="tile-header-main">Power Supply</h3>
+      <span class="cpcdash-model">Corsair PSU</span>
+      <span class="cpcdash-summary"><i class="fa fa-bolt"></i> <span class="cpcdash-power">--</span> W &nbsp; <i class="fa fa-thermometer-half"></i> <span class="cpcdash-temp">--</span> &deg;C &nbsp; Load: <span class="cpcdash-load">--</span>%</span>
+    </div></span>
+    <span class="tile-header-right"><span class="tile-header-right-controls"><a href="/Tasks/CorsairPSUCenter" title="Open Corsair PSU Center"><i class="fa fa-fw fa-cog control"></i></a></span></span>
+  </span></td></tr>
+  <tr><td><span class="w26 header">12V</span><span class="w26 header">5V</span><span class="w26 header">3.3V</span></td></tr>
+  <tr><td><span class="w26"><span class="cpcdash-v12">--</span> V &nbsp; <span class="cpcdash-p12">--</span> W</span><span class="w26"><span class="cpcdash-v5">--</span> V &nbsp; <span class="cpcdash-p5">--</span> W</span><span class="w26"><span class="cpcdash-v33">--</span> V &nbsp; <span class="cpcdash-p33">--</span> W</span></td></tr>
+  <tr><td><span class="w26">VRM / Case temperature</span><span class="w26"><span class="cpcdash-vrm">--</span> / <span class="cpcdash-case">--</span> &deg;C</span><span class="w26">Fan: <span class="cpcdash-fan">--</span> RPM</span></td></tr>
+  <tr><td><span class="w26">Efficiency / Input</span><span class="w26"><span class="cpcdash-eff">--</span>%</span><span class="w26"><span class="cpcdash-vin">--</span> V / <span class="cpcdash-pin">--</span> W</span></td></tr>
+</tbody>
+EOT;
+?>
+<script>
+(function(){
+  function put(selector,value,digits){var n=Number(value);var s=(value===null||value===undefined||value===''||!Number.isFinite(n))?'--':(digits===undefined?String(n):n.toFixed(digits));document.querySelectorAll(selector).forEach(function(e){e.textContent=s;});}
+  function txt(selector,value){document.querySelectorAll(selector).forEach(function(e){e.textContent=value;});}
+  function clear(){['.cpcdash-power','.cpcdash-temp','.cpcdash-load','.cpcdash-v12','.cpcdash-p12','.cpcdash-v5','.cpcdash-p5','.cpcdash-v33','.cpcdash-p33','.cpcdash-vrm','.cpcdash-case','.cpcdash-fan','.cpcdash-eff','.cpcdash-vin','.cpcdash-pin'].forEach(function(s){put(s,null);});}
+  function refresh(){ $.getJSON('/plugins/corsairpsucenter/api.php?action=status',function(d){
+    if(!d||!d.connected){txt('.cpcdash-model','No PSU detected');clear();return;}
+    txt('.cpcdash-model',d.model||'Corsair PSU');put('.cpcdash-power',d.power_out,0);put('.cpcdash-temp',d.temp_vrm,0);put('.cpcdash-load',d.load_pct,0);
+    put('.cpcdash-v12',d.v_12,2);put('.cpcdash-p12',d.p_12,0);put('.cpcdash-v5',d.v_5,2);put('.cpcdash-p5',d.p_5,0);put('.cpcdash-v33',d.v_33,2);put('.cpcdash-p33',d.p_33,0);
+    put('.cpcdash-vrm',d.temp_vrm,1);put('.cpcdash-case',d.temp_case,1);put('.cpcdash-fan',d.fan_rpm,0);put('.cpcdash-eff',d.efficiency,1);put('.cpcdash-vin',d.v_in,0);put('.cpcdash-pin',d.power_in,0);
+  }).fail(function(){txt('.cpcdash-model','PSU status unavailable');});}
+  refresh();window.setInterval(refresh,2000);
+})();
+</script>
