@@ -9,7 +9,7 @@ The plugin reuses the live values and power/temperature icons already rendered b
 In Unraid, open **Plugins → Install Plugin**, paste this URL, and click **Install**:
 
 ```text
-https://raw.githubusercontent.com/shiftylilbastrd/Unraid-plugins/main/cpu-tile-summary/cpu-tile-summary.plg
+https://raw.githubusercontent.com/shiftylilbastrd/Unraid-plugins/main/cpu-tile-summary/cpu-tile-summary-0.1.5.plg
 ```
 
 Hard-refresh the Dashboard with **Ctrl+F5** after installation.
