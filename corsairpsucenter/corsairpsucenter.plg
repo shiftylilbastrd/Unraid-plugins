@@ -2,16 +2,25 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name "corsairpsucenter">
 <!ENTITY author "shiftylilbastrd">
-<!ENTITY version "2026.11.08.2">
+<!ENTITY version "2026.11.24.1">
 <!ENTITY launch "CorsairPSUCenter">
 <!ENTITY gitURL "https://raw.githubusercontent.com/shiftylilbastrd/Unraid-plugins/main/corsairpsucenter">
 <!ENTITY pluginURL "&gitURL;/&name;.plg">
-<!ENTITY source "https://raw.githubusercontent.com/racoutlaw/corsair-psu-center/main/archive/corsairpsucenter-2026.09.26-x86_64.txz">
-<!ENTITY md5 "62174c06f6c842db3fb5bb05656a3dee">
+<!ENTITY source "&gitURL;/corsairpsucenter-2026.09.26-log1-x86_64.txz">
+<!ENTITY md5 "7959d2057c0e3912f11e281a162e4093">
 <!ENTITY plugdir "/boot/config/plugins/&name;">
 ]>
 <PLUGIN name="&name;" author="&author;" version="&version;" pluginURL="&pluginURL;" launch="&launch;" icon="bolt" min="6.12.0" support="https://github.com/racoutlaw/corsair-psu-center">
-<CHANGES>###2026.11.08.2
+<CHANGES>###2026.11.24.1
+- Diagnostic: every liquidctl call (OCP toggle, fan mode/preset changes, the
+  fan-curve daemon's duty writes) is now logged to
+  /var/log/corsairpsucenter-liquidctl.log with the command, success/attempt
+  count, and whether the kernel's corsairpsu hwmon node is still present
+  right after - to catch, in the act, whatever has been intermittently
+  knocking the kernel driver loose (requiring a manual USB rebind to
+  recover). No behavior change otherwise; same underlying package version
+  (2026.09.26) this fork has been pinned to.
+###2026.11.08.2
 - Labels the collapsed power and temperature readings for clarity.
 - Combines Corsair PSU Center auto-detection and monitoring page with a native Unraid Dashboard tile.
 - Dashboard tile shows output power, temperature, load, rail readings, fan speed, efficiency, and input details.
@@ -27,7 +36,7 @@ for pkg in /var/lib/pkgtools/packages/corsairpsucenter-*; do
 done
 exit 0
 ]]></INLINE></FILE>
-<FILE Name="&plugdir;/corsairpsucenter-2026.09.26-x86_64.txz" Run="upgradepkg --install-new"><URL>&source;</URL><MD5>&md5;</MD5></FILE>
+<FILE Name="&plugdir;/corsairpsucenter-2026.09.26-log1-x86_64.txz" Run="upgradepkg --install-new"><URL>&source;</URL><MD5>&md5;</MD5></FILE>
 <FILE Run="/bin/bash"><INLINE><![CDATA[
 set -eu
 mkdir -p /usr/local/emhttp/plugins/corsairpsucenter
